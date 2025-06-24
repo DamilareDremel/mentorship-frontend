@@ -1,15 +1,15 @@
-import { Form, useActionData, useNavigate } from "@remix-run/react";
+import { Form, useActionData, useNavigate, useSearchParams } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useAuth } from "~/context/AuthContext";
 import { useEffect } from "react";
+import { useNotification } from "~/context/NotificationContext";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
 
-  // Call your backend API
   const res = await fetch("http://localhost:5000/api/auth/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -34,13 +34,24 @@ export default function Login() {
   const actionData = useActionData<ActionData>();
   const { login } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const { showMessage } = useNotification();
 
+  // 🔥 1️⃣ Show login success + redirect
   useEffect(() => {
     if (actionData?.token && actionData?.name) {
       login(actionData.token, actionData.name);
-      navigate("/profile"); // Redirect after login
+      showMessage("Login successful!");
+      navigate("/profile");
     }
-  }, [actionData, login, navigate]);
+  }, [actionData, login, navigate, showMessage]);
+
+  // 🔥 2️⃣ Show registration success toast if URL param exists
+  useEffect(() => {
+    if (searchParams.get("registered") === "true") {
+      showMessage("Registration successful! You can now log in.");
+    }
+  }, [searchParams, showMessage]);
 
   return (
     <div className="max-w-md mx-auto mt-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -48,21 +59,19 @@ export default function Login() {
 
       <Form method="post" className="space-y-4">
         <input
-        type="email"
-        name="email"
-        placeholder="Email"
-        className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-        required
+          type="email"
+          name="email"
+          placeholder="Email"
+          className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          required
         />
-
         <input
-        type="password"
-        name="password"
-        placeholder="Password"
-        className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-        required
+          type="password"
+          name="password"
+          placeholder="Password"
+          className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+          required
         />
-
         <button
           type="submit"
           className="w-full p-3 bg-blue-600 text-white rounded"
