@@ -11,7 +11,7 @@ export const action: ActionFunction = async ({ request }) => {
   const password = formData.get("password");
   const role = formData.get("role");
 
-  const res = await fetch("http://localhost:5000/api/auth/register", {
+  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, email, password, role }),
@@ -33,11 +33,6 @@ export default function Register() {
   const actionData = useActionData<ActionData>();
   const navigate = useNavigate();
   const { showMessage } = useNotification();
-
-  useEffect(() => {
-    showMessage("Registration successful!");
-    // Optionally auto-redirect on success
-  }, []);
 
   return (
     <div className="max-w-md mx-auto mt-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow">

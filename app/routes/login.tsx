@@ -1,16 +1,17 @@
-import { Form, useActionData, useNavigate, useSearchParams } from "@remix-run/react";
+import { data, Form, useActionData, useNavigate, useSearchParams } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useAuth } from "~/context/AuthContext";
 import { useEffect } from "react";
 import { useNotification } from "~/context/NotificationContext";
+import { tokenCookie } from "~/cookies";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
 
-  const res = await fetch("http://localhost:5000/api/auth/login", {
+  const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -18,7 +19,16 @@ export const action: ActionFunction = async ({ request }) => {
 
   if (res.ok) {
     const data = await res.json();
-    return json({ token: data.token, name: data.user.name });
+    const cookieHeader = await tokenCookie.serialize(data.token);
+
+    return json(
+      { token: data.token, name: data.user.name, role: data.user.role },
+      {
+        headers: {
+          "Set-Cookie": cookieHeader,
+        },
+      }
+    );
   }
 
   return json({ error: "Invalid credentials" }, { status: 400 });
@@ -28,6 +38,7 @@ type ActionData = {
   error?: string;
   token?: string;
   name?: string;
+  role?: string;
 };
 
 export default function Login() {
@@ -37,16 +48,16 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   const { showMessage } = useNotification();
 
-  // 🔥 1️⃣ Show login success + redirect
+  // ✅ Show login success + redirect
   useEffect(() => {
-    if (actionData?.token && actionData?.name) {
-      login(actionData.token, actionData.name);
+    if (actionData?.token && actionData?.name && actionData?.role) {
+      login(actionData.token, actionData.name, actionData.role);
       showMessage("Login successful!");
       navigate("/profile");
     }
   }, [actionData, login, navigate, showMessage]);
 
-  // 🔥 2️⃣ Show registration success toast if URL param exists
+  // ✅ Show registration success toast if URL param exists
   useEffect(() => {
     if (searchParams.get("registered") === "true") {
       showMessage("Registration successful! You can now log in.");
@@ -79,6 +90,17 @@ export default function Login() {
           Login
         </button>
       </Form>
+
+      <p className="mt-4">
+        Forgot your password?{" "}
+        <button
+          type="button"
+          onClick={() => navigate("/reset-password")}
+          className="text-blue-600 underline"
+        >
+          Reset here
+        </button>
+      </p>
 
       {actionData?.error && (
         <p className="mt-4 text-red-500">{actionData.error}</p>

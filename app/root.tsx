@@ -11,8 +11,10 @@ import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { useTheme } from "./context/ThemeContext";
 import { useNavigate } from "@remix-run/react";
-import { NotificationProvider, useNotification } from "./context/NotificationContext";
-
+import {
+  NotificationProvider,
+  useNotification,
+} from "./context/NotificationContext";
 
 import "./tailwind.css";
 
@@ -60,44 +62,52 @@ export default function App() {
 }
 
 function MainApp() {
-  const { isLoggedIn, userName, logout } = useAuth();
+  const { isLoggedIn, userName, userRole, logout, isAuthReady } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { showMessage } = useNotification();
+
+  // Wait for auth context to initialize before rendering nav + pages
+  if (!isAuthReady) {
+    return (
+      <div className="p-6 text-gray-500 dark:text-gray-300">
+        Loading authentication state...
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
       <nav className="flex justify-between p-4 bg-blue-600 text-white">
         <div className="flex gap-4">
           {!isLoggedIn && <Link to="/">Home</Link>}
           {!isLoggedIn && <Link to="/register">Register</Link>}
-          <Link to="/mentors">Mentors</Link>
-          <Link to="/sessions">Sessions</Link>
-          <Link to="/admin">Admin</Link>
+          {isLoggedIn && <Link to="/mentors">Mentors</Link>}
+          {isLoggedIn && <Link to="/sessions">Sessions</Link>}
+          {isLoggedIn && <Link to="/profile">View Profile</Link>}
+          {isLoggedIn && userRole === "admin" && <Link to="/admin">Admin</Link>}
         </div>
         <div className="flex gap-4 items-center">
           <button onClick={toggleTheme}>
-    {theme === "light" ? "🌞 Light" : "🌙 Dark"}
-  </button>
+            {theme === "light" ? "🌞 Light" : "🌙 Dark"}
+          </button>
           {isLoggedIn && <span>Hello, {userName}</span>}
-{isLoggedIn ? (
-  <button
-    onClick={() => {
-  logout();
-  showMessage("Logged out successfully!");
-  navigate("/login");
-}}
-    className="bg-red-600 px-3 py-1 rounded text-white"
-  >
-    Logout
-  </button>
-) : (
-  <Link
-    to="/login"
-    className="bg-green-600 px-3 py-1 rounded text-white"
-  >
-    Login
-  </Link>
-)}
+          {isLoggedIn ? (
+            <button
+              onClick={() => {
+                logout();
+                showMessage("Logged out successfully!");
+                navigate("/login");
+              }}
+              className="bg-red-600 px-3 py-1 rounded text-white"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link to="/login" className="bg-green-600 px-3 py-1 rounded text-white">
+              Login
+            </Link>
+          )}
         </div>
       </nav>
 
