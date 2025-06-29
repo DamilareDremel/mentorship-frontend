@@ -82,10 +82,25 @@ function MainApp() {
         <div className="flex gap-4">
           {!isLoggedIn && <Link to="/">Home</Link>}
           {!isLoggedIn && <Link to="/register">Register</Link>}
-          {isLoggedIn && <Link to="/mentors">Mentors</Link>}
-          {isLoggedIn && <Link to="/sessions">Sessions</Link>}
+          {isLoggedIn && userRole === "mentee" && <Link to="/mentors">Mentors</Link>}
+          {isLoggedIn && userRole === "mentor" && (
+          <Link to="/availabilities">My Availability</Link>)}
+          {isLoggedIn && userRole === "mentor" && (
+          <Link to="/mentor-requests">Requests</Link>)}
+          {isLoggedIn && userRole === "mentee" && (
+          <Link to="/requests">My Requests</Link>)}
+          {isLoggedIn && userRole !== "admin" && <Link to="/sessions">Sessions</Link>}
+      
+          {userRole === "admin" && (
+          <>
+            <Link to="/admin/index" className="...">Admin Dashboard</Link>
+            <a href="/admin/users" className="...">Manage Users</a>
+            <a href="/admin/requests" className="...">All Requests</a>
+            <a href="/admin/sessions" className="...">All Sessions</a>
+            <a href="/admin/assign" className="...">Assign Match</a>
+          </>
+      )}
           {isLoggedIn && <Link to="/profile">View Profile</Link>}
-          {isLoggedIn && userRole === "admin" && <Link to="/admin">Admin</Link>}
         </div>
         <div className="flex gap-4 items-center">
           <button onClick={toggleTheme}>

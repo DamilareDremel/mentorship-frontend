@@ -1,8 +1,8 @@
-import { data, Form, useActionData, useNavigate, useSearchParams } from "@remix-run/react";
+import { Form, useActionData, useNavigate, useSearchParams } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useAuth } from "~/context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNotification } from "~/context/NotificationContext";
 import { tokenCookie } from "~/cookies";
 
@@ -23,23 +23,14 @@ export const action: ActionFunction = async ({ request }) => {
 
     return json(
       { token: data.token, name: data.user.name, role: data.user.role },
-      {
-        headers: {
-          "Set-Cookie": cookieHeader,
-        },
-      }
+      { headers: { "Set-Cookie": cookieHeader } }
     );
   }
 
   return json({ error: "Invalid credentials" }, { status: 400 });
 };
 
-type ActionData = {
-  error?: string;
-  token?: string;
-  name?: string;
-  role?: string;
-};
+type ActionData = { error?: string; token?: string; name?: string; role?: string };
 
 export default function Login() {
   const actionData = useActionData<ActionData>();
@@ -48,7 +39,8 @@ export default function Login() {
   const [searchParams] = useSearchParams();
   const { showMessage } = useNotification();
 
-  // ✅ Show login success + redirect
+  const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
     if (actionData?.token && actionData?.name && actionData?.role) {
       login(actionData.token, actionData.name, actionData.role);
@@ -57,7 +49,6 @@ export default function Login() {
     }
   }, [actionData, login, navigate, showMessage]);
 
-  // ✅ Show registration success toast if URL param exists
   useEffect(() => {
     if (searchParams.get("registered") === "true") {
       showMessage("Registration successful! You can now log in.");
@@ -76,17 +67,25 @@ export default function Login() {
           className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           required
         />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          required
-        />
-        <button
-          type="submit"
-          className="w-full p-3 bg-blue-600 text-white rounded"
-        >
+
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            placeholder="Password"
+            className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 pr-10"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm"
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </button>
+        </div>
+
+        <button type="submit" className="w-full p-3 bg-blue-600 text-white rounded">
           Login
         </button>
       </Form>
@@ -102,9 +101,7 @@ export default function Login() {
         </button>
       </p>
 
-      {actionData?.error && (
-        <p className="mt-4 text-red-500">{actionData.error}</p>
-      )}
+      {actionData?.error && <p className="mt-4 text-red-500">{actionData.error}</p>}
     </div>
   );
 }
