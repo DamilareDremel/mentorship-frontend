@@ -18,17 +18,7 @@ import {
 
 import "./tailwind.css";
 import Footer from "~/components/Footer";
-import { MetaFunction } from "@remix-run/node";
 
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Mentorship Connect | Find Mentors & Grow" },
-    {
-      name: "description",
-      content: "A mentorship platform connecting mentees with mentors for career and personal growth.",
-    },
-  ];
-};
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
