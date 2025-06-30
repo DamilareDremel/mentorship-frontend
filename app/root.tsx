@@ -99,8 +99,8 @@ function MainApp() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-      <nav className="flex justify-between p-4 bg-blue-600 text-white">
-        <div className="flex gap-4">
+      <nav className="flex flex-wrap justify-between p-4 bg-blue-600 text-white">
+      <div className="flex flex-wrap gap-2">
           {!isLoggedIn && <Link to="/">Home</Link>}
           {!isLoggedIn && <Link to="/register">Register</Link>}
           {isLoggedIn && userRole === "mentee" && <Link to="/mentors">Mentors</Link>}

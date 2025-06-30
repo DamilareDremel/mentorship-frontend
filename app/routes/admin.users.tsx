@@ -71,9 +71,9 @@ export default function AdminUsersPage() {
 };
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
+    <div className="overflow-x-auto">
       <h1 className="text-3xl font-bold text-blue-600 mb-6">Admin: Manage Users</h1>
-      <table className="w-full border">
+      <table className="table-auto w-full">
         <thead>
           <tr className="bg-gray-100 dark:bg-gray-800 text-left">
             <th className="p-3 border">Name</th>
