@@ -92,7 +92,7 @@ function MainApp() {
   if (!isAuthReady) {
     return (
       <div className="p-6 text-gray-500 dark:text-gray-300">
-        Loading authentication state...
+        Loading application...
       </div>
     );
   }
@@ -103,22 +103,22 @@ function MainApp() {
       <div className="flex flex-wrap gap-2">
           {!isLoggedIn && <Link to="/">Home</Link>}
           {!isLoggedIn && <Link to="/register">Register</Link>}
-          {isLoggedIn && userRole === "mentee" && <Link to="/mentors">Mentors</Link>}
+          {isLoggedIn && userRole === "mentee" && <Link to="/mentors">Mentors |</Link>}
           {isLoggedIn && userRole === "mentor" && (
-          <Link to="/availabilities">My Availability</Link>)}
+          <Link to="/availabilities">My Availability |</Link>)}
           {isLoggedIn && userRole === "mentor" && (
-          <Link to="/mentor-requests">Requests</Link>)}
+          <Link to="/mentor-requests">Requests |</Link>)}
           {isLoggedIn && userRole === "mentee" && (
-          <Link to="/requests">My Requests</Link>)}
-          {isLoggedIn && userRole !== "admin" && <Link to="/sessions">Sessions</Link>}
+          <Link to="/requests">My Requests |</Link>)}
+          {isLoggedIn && userRole !== "admin" && <Link to="/sessions">Sessions |</Link>}
       
           {userRole === "admin" && (
           <>
-            <Link to="/admin/index" className="...">Admin Dashboard</Link>
-            <a href="/admin/users" className="...">Manage Users</a>
-            <a href="/admin/requests" className="...">All Requests</a>
-            <a href="/admin/sessions" className="...">All Sessions</a>
-            <a href="/admin/assign" className="...">Assign Match</a>
+            <Link to="/admin/index" className="...">Admin Dashboard |</Link>
+            <a href="/admin/users" className="...">Manage Users |</a>
+            <a href="/admin/requests" className="...">All Requests |</a>
+            <a href="/admin/sessions" className="...">All Sessions |</a>
+            <a href="/admin/assign" className="...">Assign Match |</a>
           </>
       )}
           {isLoggedIn && <Link to="/profile">View Profile</Link>}
