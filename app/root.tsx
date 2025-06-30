@@ -6,7 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { useTheme } from "./context/ThemeContext";
@@ -19,16 +19,17 @@ import {
 import "./tailwind.css";
 import Footer from "~/components/Footer";
 
+import { MetaFunction } from "@remix-run/node";
 
-export const meta: MetaFunction = () => [
-  { title: "Mentorship Connect | Find Mentors & Grow" },
-  { name: "description", content: "A mentorship platform connecting mentees with mentors for career and personal growth." },
-  { property: "og:title", content: "Mentorship Connect | Find Mentors & Grow" },
-  { property: "og:description", content: "A mentorship platform connecting mentees with mentors for career and personal growth." },
-  { property: "og:image", content: "/preview.png" },
-  { property: "og:url", content: "https://mentorship-frontend-hl1n.vercel.app" },
-  { name: "twitter:card", content: "summary_large_image" },
-];
+export const meta: MetaFunction = () => {
+  return [
+    { title: "Mentorship Connect | Find Mentors & Grow" },
+    {
+      name: "description",
+      content: "A mentorship platform connecting mentees with mentors for career and personal growth.",
+    },
+  ];
+};
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,13 +47,19 @@ export const links: LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
+    <head>
         <link rel="icon" href="/favicon.ico" />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <Meta /> {/* This will now pick up from meta function above */}
+        <meta property="og:title" content="Mentorship Connect | Find Mentors & Grow" />
+        <meta property="og:description" content="A mentorship platform connecting mentees with mentors for career and personal growth." />
+        <meta property="og:image" content="/preview.png" />
+        <meta property="og:url" content="https://mentorship-frontend-hl1n.vercel.app" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <Meta />
         <Links />
-      </head>
+    </head>
+
       <body>
         {children}
         <ScrollRestoration />
@@ -61,6 +68,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
+
 
 export default function App() {
   return (
@@ -80,6 +88,7 @@ function MainApp() {
   const navigate = useNavigate();
   const { showMessage } = useNotification();
 
+  // Wait for auth context to initialize before rendering nav + pages
   if (!isAuthReady) {
     return (
       <div className="p-6 text-gray-500 dark:text-gray-300">
@@ -96,26 +105,22 @@ function MainApp() {
           {!isLoggedIn && <Link to="/register">Register</Link>}
           {isLoggedIn && userRole === "mentee" && <Link to="/mentors">Mentors</Link>}
           {isLoggedIn && userRole === "mentor" && (
-            <Link to="/availabilities">My Availability</Link>
-          )}
+          <Link to="/availabilities">My Availability</Link>)}
           {isLoggedIn && userRole === "mentor" && (
-            <Link to="/mentor-requests">Requests</Link>
-          )}
+          <Link to="/mentor-requests">Requests</Link>)}
           {isLoggedIn && userRole === "mentee" && (
-            <Link to="/requests">My Requests</Link>
-          )}
-          {isLoggedIn && userRole !== "admin" && (
-            <Link to="/sessions">Sessions</Link>
-          )}
+          <Link to="/requests">My Requests</Link>)}
+          {isLoggedIn && userRole !== "admin" && <Link to="/sessions">Sessions</Link>}
+      
           {userRole === "admin" && (
-            <>
-              <Link to="/admin/index">Admin Dashboard</Link>
-              <a href="/admin/users">Manage Users</a>
-              <a href="/admin/requests">All Requests</a>
-              <a href="/admin/sessions">All Sessions</a>
-              <a href="/admin/assign">Assign Match</a>
-            </>
-          )}
+          <>
+            <Link to="/admin/index" className="...">Admin Dashboard</Link>
+            <a href="/admin/users" className="...">Manage Users</a>
+            <a href="/admin/requests" className="...">All Requests</a>
+            <a href="/admin/sessions" className="...">All Sessions</a>
+            <a href="/admin/assign" className="...">Assign Match</a>
+          </>
+      )}
           {isLoggedIn && <Link to="/profile">View Profile</Link>}
         </div>
         <div className="flex gap-4 items-center">
