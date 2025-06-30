@@ -18,17 +18,6 @@ import {
 
 import "./tailwind.css";
 import Footer from "~/components/Footer";
-import { MetaFunction } from "@remix-run/node";
-
-export const meta: MetaFunction = () => {
-  return [
-    { title: "Mentorship Connect | Find Mentors & Grow" },
-    {
-      name: "description",
-      content: "A mentorship platform connecting mentees with mentors for career and personal growth.",
-    },
-  ];
-};
 
 export const links: LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -46,15 +35,19 @@ export const links: LinksFunction = () => [
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
+    <head>
         <link rel="icon" href="/favicon.ico" />
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Mentorship Connect | Find Mentors & Grow</title>
-        <meta name="description" content="A mentorship platform connecting mentees with mentors for career and personal growth." />
+        <meta property="og:title" content="Mentorship Connect | Find Mentors & Grow" />
+        <meta property="og:description" content="A mentorship platform connecting mentees with mentors for career and personal growth." />
+        <meta property="og:image" content="/preview.png" />
+        <meta property="og:url" content="https://mentorship-frontend-hl1n.vercel.app" />
+        <meta name="twitter:card" content="summary_large_image" />
         <Meta />
         <Links />
-      </head>
+    </head>
+
       <body>
         {children}
         <ScrollRestoration />
