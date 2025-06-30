@@ -2,6 +2,7 @@ import { Form, useActionData } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useNotification } from "~/context/NotificationContext";
+import { useState } from "react";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -30,6 +31,7 @@ type ActionData = {
 export default function ResetPassword() {
   const actionData = useActionData<ActionData>();
   const { showMessage } = useNotification();
+  const [showPassword, setShowPassword] = useState(false);
 
   if (actionData?.success) {
     showMessage("Password reset successfully!");
@@ -47,13 +49,23 @@ export default function ResetPassword() {
           className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
           required
         />
-        <input
-          type="password"
-          name="newPassword"
-          placeholder="Enter new password"
-          className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
-          required
-        />
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="newPassword"
+            placeholder="Enter new password"
+            className="w-full p-3 border rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute top-3 right-3 text-sm"
+          >
+            {showPassword ? "🙈" : "👁️"}
+          </button>
+        </div>
+
         <button
           type="submit"
           className="w-full p-3 bg-blue-600 text-white rounded"
