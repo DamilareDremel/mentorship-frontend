@@ -65,20 +65,42 @@ export default function MentorDetails() {
 
   // Function to handle mentorship request
   const handleRequest = () => {
-    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/requests`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ mentorId: mentor.id }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        alert("Mentorship request sent successfully!");
+  fetch(`${import.meta.env.VITE_API_BASE_URL}/api/requests/sent`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+    .then((res) => res.json())
+    .then((requests) => {
+      const existing = requests.find(
+        (r: any) =>
+          r.mentorId === mentor.id &&
+          (r.status === "PENDING" || r.status === "ACCEPTED")
+      );
+
+      if (existing) {
+        alert("You already have a pending or active mentorship request with this mentor.");
+        return;
+      }
+
+      // No existing request — send new one
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/requests`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ mentorId: mentor.id }),
       })
-      .catch(console.error);
-  };
+        .then((res) => res.json())
+        .then(() => {
+          alert("Mentorship request sent successfully!");
+        })
+        .catch(console.error);
+    })
+    .catch(console.error);
+};
+
 
   // 📌 New: Book session handler
   const handleBookSession = (day: string, startTime: string) => {
