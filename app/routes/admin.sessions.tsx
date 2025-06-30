@@ -8,46 +8,78 @@ type Session = {
   date: string;
   time: string;
   status: string;
-  menteeFeedback: string | null;
-  mentorFeedback: string | null;
-  requestId: number;
+  menteeFeedback?: string;
+  menteeRating?: number;
+  mentorFeedback?: string;
 };
 
 export default function AdminSessions() {
-  const { userRole } = useAuth();
+  const { isLoggedIn, userRole } = useAuth();
   const [sessions, setSessions] = useState<Session[]>([]);
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (userRole === "admin") {
-      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/sessions`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-        .then((res) => res.json())
-        .then(setSessions)
-        .catch(console.error);
-    }
-  }, [userRole]);
+  const fetchSessions = () => {
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/sessions`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => res.json())
+      .then(setSessions)
+      .catch(console.error);
+  };
 
-  if (userRole !== "admin") return <p className="p-6">Access Denied</p>;
+  useEffect(() => {
+    if (isLoggedIn && userRole === "admin") fetchSessions();
+  }, [isLoggedIn, userRole]);
+
+  const handleDelete = (id: number) => {
+    if (!confirm("Are you sure you want to delete this session?")) return;
+
+    fetch(`${import.meta.env.VITE_API_BASE_URL}/api/admin/sessions/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then(() => {
+        alert("Session deleted!");
+        fetchSessions();
+      })
+      .catch(console.error);
+  };
+
+  if (!isLoggedIn || userRole !== "admin") {
+    return <p className="p-6">Access Denied</p>;
+  }
 
   return (
-    <div className="p-6 max-w-5xl mx-auto">
-      <h1 className="text-3xl font-bold text-blue-600 mb-4">All Mentorship Sessions</h1>
+    <div className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-3xl font-bold mb-4 text-blue-600">All Sessions</h1>
       {sessions.length === 0 ? (
-        <p>No sessions found.</p>
+        <p>No sessions yet.</p>
       ) : (
-        sessions.map((session) => (
-          <div key={session.id} className="p-3 border mb-3 rounded">
-            <p>Session ID: {session.id}</p>
-            <p>Mentee ID: {session.menteeId}</p>
-            <p>Mentor ID: {session.mentorId}</p>
-            <p>Date: {session.date}</p>
-            <p>Time: {session.time}</p>
-            <p>Status: {session.status}</p>
-            <p>Mentee Feedback: {session.menteeFeedback || "None"}</p>
-            <p>Mentor Feedback: {session.mentorFeedback || "None"}</p>
-            <p>Request ID: {session.requestId}</p>
+        sessions.map((s) => (
+          <div key={s.id} className="p-4 border rounded mb-4">
+            <p><strong>Session ID:</strong> {s.id}</p>
+            <p><strong>Mentee ID:</strong> {s.menteeId}</p>
+            <p><strong>Mentor ID:</strong> {s.mentorId}</p>
+            <p><strong>Date:</strong> {s.date}</p>
+            <p><strong>Time:</strong> {s.time}</p>
+            <p><strong>Status:</strong> {s.status}</p>
+
+            {s.menteeFeedback && (
+              <p><strong>Mentee Feedback:</strong> {s.menteeFeedback}</p>
+            )}
+            {s.menteeRating !== undefined && (
+              <p><strong>Mentee Rating:</strong> {s.menteeRating} ⭐</p>
+            )}
+            {s.mentorFeedback && (
+              <p><strong>Mentor Feedback:</strong> {s.mentorFeedback}</p>
+            )}
+
+            <button
+              onClick={() => handleDelete(s.id)}
+              className="mt-3 bg-red-600 text-white px-3 py-1 rounded"
+            >
+              Delete
+            </button>
           </div>
         ))
       )}
