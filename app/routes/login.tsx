@@ -43,10 +43,14 @@ export default function Login() {
 
   useEffect(() => {
     if (actionData?.token && actionData?.name && actionData?.role) {
-      login(actionData.token, actionData.name, actionData.role);
-      showMessage("Login successful!");
-      navigate("/profile");
-    }
+  login(actionData.token, actionData.name, actionData.role);
+  showMessage("Login successful!");
+  if (actionData.role === "admin") {
+    navigate("/admin/index");
+  } else {
+    navigate("/profile");
+  }
+}
   }, [actionData, login, navigate, showMessage]);
 
   useEffect(() => {
