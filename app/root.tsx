@@ -54,7 +54,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <meta property="og:title" content="Mentorship Connect | Find Mentors & Grow" />
         <meta property="og:description" content="A mentorship platform connecting mentees with mentors for career and personal growth." />
         <meta property="og:image" content="/preview.png" />
-        <meta property="og:url" content="https://mentorship-frontend-hl1n.vercel.app" />
+        <meta property="og:url" content="https://mentorship-connect-alpha.vercel.app/" />
         <meta name="twitter:card" content="summary_large_image" />
         <Meta />
         <Links />
