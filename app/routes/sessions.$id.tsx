@@ -9,14 +9,13 @@ type Session = {
   date: string;
   time: string;
   status: string;
-  menteeId: number;
-  mentorId: number;
+  mentee: { id: number; name: string };
+  mentor: { id: number; name: string };
   menteeFeedback?: string | null;
   menteeRating?: number | null;
   mentorFeedback?: string | null;
-  menteeName?: string | null;
-  mentorName?: string | null;
 };
+
 
 export const loader: LoaderFunction = async ({ params, request }) => {
   const { id } = params;
@@ -84,10 +83,9 @@ export default function SessionDetails() {
       <p>Date: {session.date}</p>
       <p>Time: {session.time}</p>
       <p>Status: {session.status}</p>
-      <p>Mentee ID: {session.menteeId}</p>
-      <p>Mentor ID: {session.mentorId}</p>
-      <p>Mentee: {session.menteeName ?? session.menteeId}</p>
-      <p>Mentor: {session.mentorName ?? session.mentorId}</p>
+      <p>Mentee: {session.mentee.name}</p>
+      <p>Mentor: {session.mentor.name}</p>
+
 
       <div className="mt-6 space-y-4">
         <h2 className="text-xl font-semibold">Feedback Summary</h2>
