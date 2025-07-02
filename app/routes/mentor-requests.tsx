@@ -5,6 +5,8 @@ type Request = {
   id: number;
   menteeId: number;
   mentorId: number;
+  menteeName?: string | null;
+  mentorName?: string | null;
   status: string;
 };
 
@@ -57,6 +59,8 @@ export default function MentorRequests() {
         requests.map((req) => (
           <div key={req.id} className="p-4 border mb-3 rounded">
             <p>Mentee ID: {req.menteeId}</p>
+            <p>Mentee: {req.menteeName}</p>
+            <p>Mentor: {req.mentorName}</p>
             <p>Status: {req.status}</p>
             {req.status === "PENDING" && (
               <div className="flex gap-2 mt-2">

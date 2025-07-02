@@ -14,6 +14,8 @@ type Session = {
   menteeFeedback?: string | null;
   menteeRating?: number | null;
   mentorFeedback?: string | null;
+  menteeName?: string | null;
+  mentorName?: string | null;
 };
 
 export const loader: LoaderFunction = async ({ params, request }) => {
@@ -84,6 +86,8 @@ export default function SessionDetails() {
       <p>Status: {session.status}</p>
       <p>Mentee ID: {session.menteeId}</p>
       <p>Mentor ID: {session.mentorId}</p>
+      <p>Mentee: {session.menteeName ?? session.menteeId}</p>
+      <p>Mentor: {session.mentorName ?? session.mentorId}</p>
 
       <div className="mt-6 space-y-4">
         <h2 className="text-xl font-semibold">Feedback Summary</h2>
