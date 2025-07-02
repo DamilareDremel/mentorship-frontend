@@ -5,10 +5,11 @@ type Request = {
   id: number;
   menteeId: number;
   mentorId: number;
-  menteeName?: string | null;
-  mentorName?: string | null;
+  mentee: { id: number; name: string };
+  mentor: { id: number; name: string };
   status: string;
 };
+
 
 export default function MentorRequests() {
   const { isLoggedIn, userRole } = useAuth();
@@ -59,8 +60,8 @@ export default function MentorRequests() {
         requests.map((req) => (
           <div key={req.id} className="p-4 border mb-3 rounded">
             <p>Mentee ID: {req.menteeId}</p>
-            <p>Mentee: {req.menteeName}</p>
-            <p>Mentor: {req.mentorName}</p>
+            <p>Mentee: {req.mentee?.name}</p>
+            <p>Mentor: {req.mentor?.name}</p>
             <p>Status: {req.status}</p>
             {req.status === "PENDING" && (
               <div className="flex gap-2 mt-2">
