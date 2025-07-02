@@ -23,9 +23,9 @@ import { MetaFunction } from "@remix-run/node";
 
 export const meta: MetaFunction = () => {
   return [
-    { title: "Mentorship Connect | Find Mentors & Grow" },
+    { title: "Mentorship Connect" },
     {
-      name: "description",
+      name: "Find Mentors & Grow",
       content: "A mentorship platform connecting mentees with mentors for career and personal growth.",
     },
   ];
