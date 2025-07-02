@@ -6,7 +6,9 @@ type Request = {
   menteeId: number;
   mentorId: number;
   status: string;
+  mentor?: { id: number; name: string };
 };
+
 
 type Session = {
   id: number;
@@ -106,6 +108,7 @@ export default function MenteeRequests() {
           <div key={req.id} className="p-4 border mb-3 rounded">
             <p>Request ID: {req.id}</p>
             <p>Mentor ID: {req.mentorId}</p>
+            <p>Mentor: {req.mentor?.name}</p>
             <p>Status: {req.status}</p>
 
             {req.status === "ACCEPTED" && !hasActiveSessionForRequest(req.id) && (
