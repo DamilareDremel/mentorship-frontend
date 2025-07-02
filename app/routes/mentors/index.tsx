@@ -73,6 +73,7 @@ export default function MentorsPage() {
           </Link>
         ))}
       </div>
+      <Outlet />
     </div>
   );
 }

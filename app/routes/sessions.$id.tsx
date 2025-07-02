@@ -1,5 +1,5 @@
 import { useAuth } from "~/context/AuthContext";
-import { useLoaderData, json, Outlet } from "@remix-run/react";
+import { useLoaderData, json } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/node";
 import { useState } from "react";
 import { useNotification } from "~/context/NotificationContext";
@@ -142,7 +142,6 @@ export default function SessionDetails() {
           </button>
         </div>
       )}
-      <Outlet />
     </div>
   );
 }
