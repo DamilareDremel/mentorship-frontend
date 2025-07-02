@@ -73,8 +73,6 @@ export default function MentorsPage() {
           </Link>
         ))}
       </div>
-
-      <Outlet /> {/* This will render the nested routes like MentorDetails */}  
     </div>
   );
 }

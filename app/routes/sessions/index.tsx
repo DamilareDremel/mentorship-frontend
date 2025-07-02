@@ -74,7 +74,6 @@ export default function SessionsPage() {
           ))}
         </div>
       )}
-      <Outlet />
     </div>
   );
 }
