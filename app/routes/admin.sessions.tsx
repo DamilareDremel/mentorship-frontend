@@ -61,10 +61,10 @@ export default function AdminSessions() {
         sessions.map((s) => (
           <div key={s.id} className="p-4 border rounded mb-4">
             <p><strong>Session ID:</strong> {s.id}</p>
-            <p>Mentee ID: {s.menteeId}</p>
-            <p>Mentee Name: {s.mentee?.name}</p>
-            <p>Mentor ID: {s.mentorId}</p>
-            <p>Mentor Name: {s.mentor?.name}</p>
+            <p><strong>Mentee ID:</strong> {s.menteeId}</p>
+            <p><strong>Mentee Name:</strong> {s.mentee?.name}</p>
+            <p><strong>Mentor ID:</strong> {s.mentorId}</p>
+            <p><strong>Mentor Name:</strong> {s.mentor?.name}</p>
             <p><strong>Date:</strong> {s.date}</p>
             <p><strong>Time:</strong> {s.time}</p>
             <p><strong>Status:</strong> {s.status}</p>
