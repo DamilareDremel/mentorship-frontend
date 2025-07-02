@@ -5,6 +5,8 @@ type Request = {
   id: number;
   menteeId: number;
   mentorId: number;
+  mentee?: { id: number; name: string };
+  mentor?: { id: number; name: string };
   status: string;
 };
 
@@ -54,7 +56,9 @@ export default function AdminRequests() {
           <div key={req.id} className="p-4 border rounded mb-3">
             <p>Request ID: {req.id}</p>
             <p>Mentee ID: {req.menteeId}</p>
+            <p>Mentee Name: {req.mentee?.name}</p>
             <p>Mentor ID: {req.mentorId}</p>
+            <p>Mentor Name: {req.mentor?.name}</p>
             <p>Status: {req.status}</p>
             <button
               onClick={() => handleDelete(req.id)}
