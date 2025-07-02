@@ -83,8 +83,8 @@ export default function SessionDetails() {
       <p>Date: {session.date}</p>
       <p>Time: {session.time}</p>
       <p>Status: {session.status}</p>
-      <p>Mentee: {session.mentee.name}, {session.mentee.id} </p>
-      <p>Mentor: {session.mentor.name}, {session.mentor.id}</p>
+      <p>Mentee: {session.mentee.name}, ID: {session.mentee.id} </p>
+      <p>Mentor: {session.mentor.name}, ID: {session.mentor.id}</p>
 
 
       <div className="mt-6 space-y-4">
