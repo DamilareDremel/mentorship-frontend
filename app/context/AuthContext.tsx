@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useNavigate } from "@remix-run/react";
 
 type AuthContextType = {
   isLoggedIn: boolean;
@@ -17,28 +18,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [isAuthReady, setIsAuthReady] = useState(false);
 
+  const navigate = useNavigate();
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedName = localStorage.getItem("userName");
     const storedRole = localStorage.getItem("userRole");
+
     if (token && storedName && storedRole) {
-      setIsLoggedIn(true);
-      setUserName(storedName);
-      setUserRole(storedRole);
+      fetch(`${import.meta.env.VITE_API_BASE_URL}/api/auth/check-token`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => {
+          if (res.status === 200) {
+            setIsLoggedIn(true);
+            setUserName(storedName);
+            setUserRole(storedRole);
+          } else {
+            console.log("Token expired — logging out.");
+            logout();
+            navigate("/login");
+          }
+        })
+        .catch((err) => {
+          console.error("Token check failed:", err);
+          logout();
+          navigate("/login");
+        })
+        .finally(() => {
+          setIsAuthReady(true);
+        });
+    } else {
+      setIsAuthReady(true);
     }
-    setIsAuthReady(true);
   }, []);
 
   const login = (token: string, name: string, role: string) => {
-  localStorage.setItem("token", token);
-  localStorage.setItem("userName", name);
-  localStorage.setItem("userRole", role);
-  document.cookie = `token=${token}; path=/`;
-  setIsLoggedIn(true);
-  setUserName(name);
-  setUserRole(role);
-};
-
+    localStorage.setItem("token", token);
+    localStorage.setItem("userName", name);
+    localStorage.setItem("userRole", role);
+    document.cookie = `token=${token}; path=/`;
+    setIsLoggedIn(true);
+    setUserName(name);
+    setUserRole(role);
+  };
 
   const logout = () => {
     localStorage.removeItem("token");
