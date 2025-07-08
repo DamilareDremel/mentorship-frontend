@@ -102,7 +102,7 @@ function MainApp() {
       <nav className="flex flex-wrap justify-between p-4 bg-blue-600 text-white">
       <div className="flex flex-wrap gap-2">
           {!isLoggedIn && <Link to="/">Home</Link>}
-          {!isLoggedIn && <Link to="/register">Register</Link>}
+          {/*!isLoggedIn && <Link to="/register">Register</Link>*/}
           {isLoggedIn && userRole === "mentee" && <Link to="/mentors">Mentors |</Link>}
           {isLoggedIn && userRole === "mentor" && (
           <Link to="/availabilities">My Availability |</Link>)}
